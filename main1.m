@@ -45,6 +45,23 @@ W2 = 31.9988; % 02 [g/mol]
 W3 = 28.0152; % N2 [g/mol]
 R0 = 8314;    %    [kJ/mol*K]
 
+% Fick's Diffusion Model, Binary Diffusion Constants (D_i_carrier)
+
+% Hydrogen is Carrier
+D_H2_H2 = 33.83 * 10^5;
+D_O2_H2 = 18.88 * 10^5;
+D_N2_H2 = 17.76 * 10^5;
+
+% Oxygen is Carrier
+D_H2_O2 = 18.88 * 10^5;
+D_O2_O2 = 5.05 * 10^5;
+D_N2_O2 = 4.96 * 10^5;
+ 
+% Nitrogen is Carrier
+D_H2_N2 = 17.76 * 10^5;
+D_O2_N2 = 4.96 * 10^5;
+D_N2_N2 = 4.87 * 10^5;
+
 % Initialise Spacial & Temporal Mesh
 dx = 0.01;             
 dt = 0.1;             
