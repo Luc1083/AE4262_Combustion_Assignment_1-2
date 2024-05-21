@@ -20,7 +20,6 @@
 % 2. mean molar mass & density
 % 3. mixture specific heat & mixture thermal conductivity
 % 4. species diffusion coefficients from 4 models
-% 5. 
 
 % Initial Conditions. Within domain, mole fractions vary linearly
 
@@ -35,11 +34,12 @@
 % Y3 = 1
 
 % Constants
-p_0 = 101325; % Atmospheric Pressure [Pa]
-T_0 = 500;    % Temperature [K]
+P = 101325; % Atmospheric Pressure [Pa]
+T = 500;    % Temperature [K]
 W1 = 2.0159;  % H2 [g/mol]
 W2 = 31.9988; % 02 [g/mol]
 W3 = 28.0152; % N2 [g/mol]
+R0 = 8314;   %    [kJ/mol*K]
 
 % Initial Solution
 dx = 0.01;
@@ -48,14 +48,18 @@ Y1 = linspace(0.4, 0, length(x));
 Y2 = linspace(0.4, 0, length(x));
 Y3 = linspace(0.2, 1, length(x));
 
-W = (Y1/W1 + Y2/W2 + Y3/W3)
+W = (Y1/W1 + Y2/W2 + Y3/W3).^-1;
+rho = P * W / (R0 * T);
+rho1 = rho .* Y1;
+rho2 = rho .* Y2;
+rho3 = rho .* Y3;
 
-% X1 = W1 * W.^-1 .* Y1
-% X2 = W2 * W.^-1 .* Y2
-% X3 = W3 * W.^-1 .* Y3
+X1 = W / W1 .* Y1;
+X2 = W / W2 .* Y2;
+X3 = W / W3 .* Y3;
 
 figure('Name','Mole Fractions at t=0')
 hold on 
-plot(x,Y1)
-plot(x,Y2)
-plot(x,Y3)
+plot(x,X1)
+plot(x,X2)
+plot(x,X3)
