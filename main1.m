@@ -45,31 +45,15 @@ W2 = 31.9988; % 02 [g/mol]
 W3 = 28.0152; % N2 [g/mol]
 R0 = 8314;    %    [kJ/mol*K]
 
-% Fick's Diffusion Model, Binary Diffusion Constants (D_i_carrier)
-
-% Hydrogen is Carrier
-D_H2_H2 = 33.83 * 10^5;
-D_O2_H2 = 18.88 * 10^5;
-D_N2_H2 = 17.76 * 10^5;
-
-% Oxygen is Carrier
-D_H2_O2 = 18.88 * 10^5;
-D_O2_O2 = 5.05 * 10^5;
-D_N2_O2 = 4.96 * 10^5;
- 
-% Nitrogen is Carrier
-D_H2_N2 = 17.76 * 10^5;
-D_O2_N2 = 4.96 * 10^5;
-D_N2_N2 = 4.87 * 10^5;
-
 % Initialise Spacial & Temporal Mesh
-dx = 0.01;             
+dx = 1e-5;             
 dt = 0.1;             
-time = 10;               
-t = 0:dt:time;
-x = 0:dx:0.1;
+time = 5;               
+t = 0:dt:time;  % [s]
+x = 0:dx:1e-4;  % [m]
 
-% Initialise Variable Arrays
+% Initialise Variable Arrays 
+% Yi = Mass Fraction, W = molar mass of mixture, Xi = molar fraction, rhoi = density of species i 
 Y1 = zeros(length(x),length(t));
 Y2 = zeros(length(x),length(t));
 Y3 = zeros(length(x),length(t));
@@ -101,6 +85,42 @@ X2(:,1) = molarfraction(W2, W(:,1), Y2(:,1));
 X3(:,1) = molarfraction(W3, W(:,1), Y3(:,1));
 
 % Begin Simulation
+
+% 1. Fick's Diffusion Model, Binary Diffusion Constants (D_i_carrier)
+
+% Hydrogen is Carrier
+D_H2_H2 = 33.83 * 10^5;
+D_O2_H2 = 18.88 * 10^5;
+D_N2_H2 = 17.76 * 10^5;
+
+% Oxygen is Carrier
+D_H2_O2 = 18.88 * 10^5;
+D_O2_O2 = 5.05 * 10^5;
+D_N2_O2 = 4.96 * 10^5;
+ 
+% Nitrogen is Carrier
+D_H2_N2 = 17.76 * 10^5;
+D_O2_N2 = 4.96 * 10^5;
+D_N2_N2 = 4.87 * 10^5;
+
+% 2. Wilke Model
+
+D1_model2 = ((X2 / (D12 * (1-X1))) + (X3 / (D13 * (1-X1)))).^-1;
+D2_model2 = ((X1 / (D21 * (1-X2))) + (X3 / (D23 * (1-X2)))).^-1;
+D3_model2 = ((X1 / (D31 * (1-X3))) + (X2 / (D32 * (1-X3)))).^-1;
+
+% 3. Le = 1 species diffusivity model (species have same diffusivity as heat)
+
+lambda = MixLambda_CK([H2, O2, N2], [X1(:,i), X2(:,i), X3(:,i)], T);
+Cp = MixCp_CK([H2, O2, N2], [X1(:,i), X2(:,i), X3(:,i)], T);
+Di_model3 = lambda / (rho * Cp);
+
+% 4. Le = const number model
+
+Le = [0.3, 1.11, 1.0];
+lambda = MixLambda_CK([H2, O2, N2], [X1(:,i), X2(:,i), X3(:,i)], T);
+Cp = MixCp_CK([H2, O2, N2], [X1(:,i), X2(:,i), X3(:,i)], T);
+Di_model4 = lamda / (Le[i] * rho * Cp);
 
 figure('Name','Mole Fractions at t=0')
 hold on 
