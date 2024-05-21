@@ -35,7 +35,15 @@
 % Y2 = 0
 % Y3 = 1
 
+% D_Model = 1 --- Fick's Diffusion Model Using Carrier Species
+% D_Model = 2 --- Wilke Model
+% D_Model = 3 --- Le = 1 Species Diffusivity Model (species have same diffusivity as heat)
+% D_Model = 4 --- Le = Const Numbers Model (species have constant but different Lewis number)
+
 %%%%%%%%%%%%%%%% Program Begin %%%%%%%%%%%%%%%%
+
+% Program Settings (Select Diffusion Model)
+D_Model = 1; 
 
 % Constants
 P = 101325;   % Atmospheric Pressure [Pa]
@@ -53,21 +61,30 @@ t = 0:dt:time;  % [s]
 x = 0:dx:1e-4;  % [m]
 
 % Initialise Variable Arrays 
-% Yi = Mass Fraction, W = molar mass of mixture, Xi = molar fraction, rhoi = density of species i 
+% Yi = Mass Fraction, Xi = molar fraction, W = molar mass of mixture, rhoi = density of species
+% Cp = Specific Heat, lamda = Thermal Conductivity, Di = Species Diffusion
+
 Y1 = zeros(length(x),length(t));
 Y2 = zeros(length(x),length(t));
 Y3 = zeros(length(x),length(t));
-
-W = zeros(length(x),length(t));
 
 X1 = zeros(length(x),length(t));
 X2 = zeros(length(x),length(t));
 X3 = zeros(length(x),length(t));
 
+W = zeros(length(x),length(t));
 rho_m = zeros(length(x),length(t));
+
 rho1 = zeros(length(x),length(t));
 rho2 = zeros(length(x),length(t));
 rho3 = zeros(length(x),length(t));
+
+Cp = zeros(length(x),length(t));
+lamda = zeros(length(x),length(t));
+
+D1 = zeros(length(x),length(t));
+D2 = zeros(length(x),length(t));
+D3 = zeros(length(x),length(t));
 
 % Set Initial Solution at t = 0
 Y1(:,1) = linspace(0.4, 0, length(x));
@@ -103,24 +120,27 @@ D_H2_N2 = 17.76 * 10^5;
 D_O2_N2 = 4.96 * 10^5;
 D_N2_N2 = 4.87 * 10^5;
 
-% 2. Wilke Model
+% 2. Wilke Model, Di_Model2
 
-D1_model2 = ((X2 / (D12 * (1-X1))) + (X3 / (D13 * (1-X1)))).^-1;
-D2_model2 = ((X1 / (D21 * (1-X2))) + (X3 / (D23 * (1-X2)))).^-1;
-D3_model2 = ((X1 / (D31 * (1-X3))) + (X2 / (D32 * (1-X3)))).^-1;
+D1(:,n) = ((X2(:,n) / (D12 * (1-X1(:,n)))) + (X3(:,n) / (D13 * (1-X1(:,n))))).^-1;
+D2(:,n) = ((X1(:,n) / (D21 * (1-X2(:,n)))) + (X3(:,n) / (D23 * (1-X2(:,n))))).^-1;
+D3(:,n) = ((X1(:,n) / (D31 * (1-X3(:,n)))) + (X2(:,n) / (D32 * (1-X3(:,n))))).^-1;
 
 % 3. Le = 1 species diffusivity model (species have same diffusivity as heat)
 
-lambda = MixLambda_CK([H2, O2, N2], [X1(:,i), X2(:,i), X3(:,i)], T);
-Cp = MixCp_CK([H2, O2, N2], [X1(:,i), X2(:,i), X3(:,i)], T);
-Di_model3 = lambda / (rho * Cp);
+% Currently n is the time step counter
+% Currently i us the species counter
+
+lambda(:,n) = MixLambda_CK([H2, O2, N2], [X1(:,n), X2(:,n), X3(:,n)], T);
+Cp(:,n) = MixCp_CK([H2, O2, N2], [X1(:,n), X2(:,n), X3(:,n)], T);
+Di_model3 = lambda(:,n) / (rho_m(:,n) * Cp(:,n));
 
 % 4. Le = const number model
 
 Le = [0.3, 1.11, 1.0];
-lambda = MixLambda_CK([H2, O2, N2], [X1(:,i), X2(:,i), X3(:,i)], T);
-Cp = MixCp_CK([H2, O2, N2], [X1(:,i), X2(:,i), X3(:,i)], T);
-Di_model4 = lamda / (Le[i] * rho * Cp);
+lambda(:,n) = MixLambda_CK([H2, O2, N2], [X1(:,n), X2(:,n), X3(:,n)], T);
+Cp(:,n) = MixCp_CK([H2, O2, N2], [X1(:,n), X2(:,n), X3(:,n)], T);
+Di_model4 = lamda(:,n) / (Le(i) * rho_m(:,n) * Cp(:,n));
 
 figure('Name','Mole Fractions at t=0')
 hold on 
