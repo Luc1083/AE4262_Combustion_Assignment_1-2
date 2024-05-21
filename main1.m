@@ -48,10 +48,11 @@ Y1 = linspace(0.4, 0, length(x));
 Y2 = linspace(0.4, 0, length(x));
 Y3 = linspace(0.2, 1, length(x));
 
-W = (Y1/W1 + Y2/W2 + Y3/W3).^-1
-X1 = W1 * W.^-1 .* Y1
-X2 = W2 * W.^-1 .* Y2
-X3 = W3 * W.^-1 .* Y3
+W = (Y1/W1 + Y2/W2 + Y3/W3)
+
+% X1 = W1 * W.^-1 .* Y1
+% X2 = W2 * W.^-1 .* Y2
+% X3 = W3 * W.^-1 .* Y3
 
 figure('Name','Mole Fractions at t=0')
 hold on 
