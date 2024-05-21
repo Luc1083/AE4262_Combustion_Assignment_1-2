@@ -37,6 +37,9 @@
 % Constants
 p_0 = 101325; % Atmospheric Pressure [Pa]
 T_0 = 500;    % Temperature [K]
+W1 = 2.0159;  % H2 [g/mol]
+W2 = 31.9988; % 02 [g/mol]
+W3 = 28.0152; % N2 [g/mol]
 
 % Initial Solution
 dx = 0.01;
@@ -44,6 +47,9 @@ x = 0:dx:0.1;
 Y1 = linspace(0.4, 0, length(x));
 Y2 = linspace(0.4, 0, length(x));
 Y3 = linspace(0.2, 1, length(x));
+
+
+W = (Y1/W1 + Y2/W2 + Y3/W3)^-1;
 
 figure('Name','Mole Fractions at t=0')
 hold on 
