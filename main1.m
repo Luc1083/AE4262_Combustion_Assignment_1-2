@@ -1,3 +1,5 @@
+%%%%%%%%%%%%%%%% Program Information %%%%%%%%%%%%%%%%
+
 % Mixture of 3 species Y1 = H2, Y2 = O2, Y3 = N2
 % Posibility of chemical reaction is excluded
 
@@ -32,6 +34,8 @@
 % Y1 = 0
 % Y2 = 0
 % Y3 = 1
+
+%%%%%%%%%%%%%%%% Program Begin %%%%%%%%%%%%%%%%
 
 % Constants
 P = 101325;   % Atmospheric Pressure [Pa]
