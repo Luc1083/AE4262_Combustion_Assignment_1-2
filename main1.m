@@ -43,7 +43,7 @@
 %%%%%%%%%%%%%%%% Program Begin %%%%%%%%%%%%%%%%
 
 % Program Settings (Select Diffusion Model)
-D_Model = 1; 
+D_Model = 3; 
 
 % Constants
 P = 101325;   % Atmospheric Pressure [Pa]
@@ -131,9 +131,9 @@ D3(:,n) = ((X1(:,n) / (D31 * (1-X3(:,n)))) + (X2(:,n) / (D32 * (1-X3(:,n))))).^-
 % Currently n is the time step counter
 % Currently i us the species counter
 
-lambda(:,n) = MixLambda_CK([H2, O2, N2], [X1(:,n), X2(:,n), X3(:,n)], T);
-Cp(:,n) = MixCp_CK([H2, O2, N2], [X1(:,n), X2(:,n), X3(:,n)], T);
-Di_model3 = lambda(:,n) / (rho_m(:,n) * Cp(:,n));
+lambda(:,n) = MixLambda_CK({'H2', 'O2', 'N2'}, [X1(:,n), X2(:,n), X3(:,n)], T);
+Cp(:,n) = MixCp_CK({'H2', 'O2', 'N2'}, [X1(:,n), X2(:,n), X3(:,n)], T);
+Di_model3 = lambda(:,n) ./ (rho_m(:,n) .* Cp(:,n)); % element-wise division
 
 % 4. Le = const number model
 
