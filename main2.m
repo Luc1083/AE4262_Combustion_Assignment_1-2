@@ -58,7 +58,7 @@ R0 = 8314;    %    [kJ/mol*K]
 % Initialise Spacial & Temporal Mesh
 dx = 1e-6;             
 dt = 1e-19;             
-time = 300000*dt;               
+time = 30000*dt;               
 t = 0:dt:time;  % [s]
 x = 0:dx:1e-4;  % [m]
 
