@@ -1,4 +1,4 @@
-4function Cp_ck = CP_CK(Sp,T)
+function Cp_ck = CP_CK(Sp,T)
 % A small function to evaluate thermodynamic data from chemkin database
 % INPUT:
 %     -- Sp: Name of the species

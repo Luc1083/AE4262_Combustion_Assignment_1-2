@@ -16,7 +16,7 @@ for a = 1 : N
     mixM = mixM + X(a).*Mix(a).M;
 end
 
-%mixCp = tmixCp./mixM; % Return Cp of mixture in J/(kg*K)
-mixCp = tmixCp; % Return Cp of mixture in J/(mole*K)
+mixCp = tmixCp./mixM; % Return Cp of mixture in J/(kg*K)
+% mixCp = tmixCp; % Return Cp of mixture in J/(mole*K)
 
 
