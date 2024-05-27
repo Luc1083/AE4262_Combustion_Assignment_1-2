@@ -282,6 +282,8 @@ plot(x, mf_1_model1(:), 'DisplayName', 'Fick Model')
 plot(x, mf_1_model2(:), 'DisplayName', 'Wilke Model')
 plot(x, mf_1_model3(:), 'DisplayName', 'Le = 1')
 plot(x, mf_1_model4(:), 'DisplayName', 'Le = 0.3')
+xlabel('Domain Position [m]')
+ylabel('Mass Flux [kg/m^2*s]')
 legend('show')
 
 subplot(1, 3, 2);
@@ -291,6 +293,8 @@ plot(x, mf_2_model1(:), 'DisplayName', 'Fick Model')
 plot(x, mf_2_model2(:), 'DisplayName', 'Wilke Model')
 plot(x, mf_2_model3(:), 'DisplayName', 'Le = 1')
 plot(x, mf_2_model4(:), 'DisplayName', 'Le = 1.11')
+xlabel('Domain Position [m]')
+ylabel('Mass Flux [kg/m^2*s]')
 legend('show')
 
 subplot(1, 3, 3);
@@ -300,6 +304,8 @@ plot(x, mf_3_model1(:), 'DisplayName', 'Fick Model')
 plot(x, mf_3_model2(:), 'DisplayName', 'Wilke Model')
 plot(x, mf_3_model3(:), 'DisplayName', 'Le = 1')
 plot(x, mf_3_model4(:), 'DisplayName', 'Le = 1.0')
+xlabel('Domain Position [m]')
+ylabel('Mass Flux [kg/m^2*s]')
 legend('show')
 
 % 3 plots next to each other showing diffusion coefficients of diff models
@@ -312,6 +318,8 @@ plot(x, D1_model1(:), 'DisplayName', 'Fick Model')
 plot(x, D1_model2(:), 'DisplayName', 'Wilke Model')
 plot(x, D1_model3(:), 'DisplayName', 'Le = 1')
 plot(x, D1_model4(:), 'DisplayName', 'Le = 0.3')
+xlabel('Domain Position [m]')
+ylabel('Diffusion Coefficient [m^2/s]')
 legend('show')
 
 subplot(1, 3, 2);
@@ -321,6 +329,8 @@ plot(x, D2_model1(:), 'DisplayName', 'Fick Model')
 plot(x, D2_model2(:), 'DisplayName', 'Wilke Model')
 plot(x, D2_model3(:), 'DisplayName', 'Le = 1')
 plot(x, D2_model4(:), 'DisplayName', 'Le = 1.11')
+xlabel('Domain Position [m]')
+ylabel('Diffusion Coefficient [m^2/s]')
 legend('show')
 
 subplot(1, 3, 3);
@@ -330,6 +340,8 @@ plot(x, D3_model1(:), 'DisplayName', 'Fick Model')
 plot(x, D3_model2(:), 'DisplayName', 'Wilke Model')
 plot(x, D3_model3(:), 'DisplayName', 'Le = 1')
 plot(x, D3_model4(:), 'DisplayName', 'Le = 1.0')
+xlabel('Domain Position [m]')
+ylabel('Diffusion Coefficient [m^2/s]')
 legend('show')
 
 function W = molarmass(Y1, Y2, Y3, W1, W2, W3)
