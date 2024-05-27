@@ -4,10 +4,11 @@ T = 500;      % Temperature [K]
 W1 = 2.0159 / 1000;  % H2 [kg/mol]
 W2 = 31.9988 / 1000; % 02 [kg/mol]
 W3 = 28.0152 / 1000; % N2 [kg/mol]
+W_CH4 = 16.0428 / 1000; % CH4 [kg/mol]
 R0 = 8.314;    %    [J/mol*K]
 
 % Initialise Spacial & Temporal Mesh
-dx = 1e-5;             
+dx = 1e-6;             
 x = 0:dx:1e-4;  % [m]
 
 % Initialise Variable Arrays 
@@ -121,16 +122,25 @@ dY3_dx = derivative_mass_fraction(Y3, x, dx);
 D_H2_H2 = 33.83 / 10^5;
 D_O2_H2 = 18.88 / 10^5;
 D_N2_H2 = 17.76 / 10^5;
+D_CH4_H2 = 17.18 / 10^5;
 
 % % Oxygen is Carrier
 D_H2_O2 = 18.88 / 10^5;
 D_O2_O2 = 5.05 / 10^5;
 D_N2_O2 = 4.96 / 10^5;
+D_CH4_O2 = 5.49 / 10^5;
 
 % % Nitrogen is Carrier
 D_H2_N2 = 17.76 / 10^5;
 D_O2_N2 = 4.96 / 10^5;
 D_N2_N2 = 4.87 / 10^5;
+D_CH4_N2 = 5.37 / 10^5;
+
+% % Methane is Carrier
+D_H2_CH4 = 17.18 / 10^5;
+D_O2_CH4 = 5.49 / 10^5;
+D_N2_CH4 = 5.37 / 10^5;
+D_CH4_CH4 = 5.63 / 10^5;
 
 % 1. Fick's Diffusion Model, Binary Diffusion Constants (D_i_carrier)
 
@@ -216,15 +226,14 @@ hold on
 plot(x,mf_1_model3(:), 'DisplayName', 'Hydrogen [H2]')
 plot(x,mf_2_model3(:), 'DisplayName', 'Oxygen [02]','LineStyle','--','Color','k')
 plot(x,mf_3_model3(:), 'DisplayName', 'Nitrogen [N2]')
-plot(x,mf_3_model3_nc(:), 'DisplayName', 'Nitrogen [N2] Non Consistent')
+plot(x,mf_3_model3_nc(:), 'DisplayName', 'Nitrogen [N2] Non Consistent', 'LineStyle','--')
 legend('show')
 
 % 4. Le = const number model
 
-Le = [0.3, 1.11, 1.0];
-D1_model4 = lambda ./ (Le(1) .* rho_m .* Cp);
-D2_model4 = lambda ./ (Le(2) .* rho_m .* Cp);
-D3_model4 = lambda ./ (Le(3) .* rho_m .* Cp);
+D1_model4 = lambda ./ (0.3 .* rho_m .* Cp);
+D2_model4 = lambda ./ (1.11 .* rho_m .* Cp);
+D3_model4 = lambda ./ (1.0 .* rho_m .* Cp);
 
 mf_1_model4 = -rho_m .* D1_model4 .* dY1_dx;
 mf_2_model4 = -rho_m .* D2_model4 .* dY2_dx;
@@ -246,6 +255,82 @@ plot(x,mf_3_model4(:), 'DisplayName', 'Nitrogen [N2]')
 plot(x,mf_3_model4_nc(:), 'DisplayName', 'Nitrogen [N2] Non Consistent')
 legend('show')
 
+figure('Name','Mass Fraction Gradient dydx')
+hold on 
+plot(x,dY1_dx(:), 'DisplayName', 'Hydrogen [H2]')
+plot(x,dY2_dx(:), 'DisplayName', 'Oxygen [02]','LineStyle','--','Color','k')
+plot(x,dY3_dx(:), 'DisplayName', 'Nitrogen [N2]')
+legend('show')
+
+figure('Name','Specific Heat')
+hold on 
+plot(x,Cp(:))
+legend('show')
+
+figure('Name','Thermal Conductivity')
+hold on 
+plot(x,lambda(:))
+legend('show')
+
+% 3 plots next to each other showing mass flux of diff models
+figure('Name','Species Mass Flux')
+
+subplot(1, 3, 1);
+hold on
+title('Hydrogen (H2) Mass Flux')
+plot(x, mf_1_model1(:), 'DisplayName', 'Fick Model')
+plot(x, mf_1_model2(:), 'DisplayName', 'Wilke Model')
+plot(x, mf_1_model3(:), 'DisplayName', 'Le = 1')
+plot(x, mf_1_model4(:), 'DisplayName', 'Le = 0.3')
+legend('show')
+
+subplot(1, 3, 2);
+hold on
+title('Oxygen (O2) Mass Flux')
+plot(x, mf_2_model1(:), 'DisplayName', 'Fick Model')
+plot(x, mf_2_model2(:), 'DisplayName', 'Wilke Model')
+plot(x, mf_2_model3(:), 'DisplayName', 'Le = 1')
+plot(x, mf_2_model4(:), 'DisplayName', 'Le = 1.11')
+legend('show')
+
+subplot(1, 3, 3);
+hold on
+title('Nitrogen (N2) Mass Flux')
+plot(x, mf_3_model1(:), 'DisplayName', 'Fick Model')
+plot(x, mf_3_model2(:), 'DisplayName', 'Wilke Model')
+plot(x, mf_3_model3(:), 'DisplayName', 'Le = 1')
+plot(x, mf_3_model4(:), 'DisplayName', 'Le = 1.0')
+legend('show')
+
+% 3 plots next to each other showing diffusion coefficients of diff models
+figure('Name','Species Diffusion Coefficients')
+
+subplot(1, 3, 1);
+hold on
+title('Hydrogen (H2) Diffusion Coefficients')
+plot(x, D1_model1(:), 'DisplayName', 'Fick Model')
+plot(x, D1_model2(:), 'DisplayName', 'Wilke Model')
+plot(x, D1_model3(:), 'DisplayName', 'Le = 1')
+plot(x, D1_model4(:), 'DisplayName', 'Le = 0.3')
+legend('show')
+
+subplot(1, 3, 2);
+hold on
+title('Oxygen (O2) Diffusion Coefficients')
+plot(x, D2_model1(:), 'DisplayName', 'Fick Model')
+plot(x, D2_model2(:), 'DisplayName', 'Wilke Model')
+plot(x, D2_model3(:), 'DisplayName', 'Le = 1')
+plot(x, D2_model4(:), 'DisplayName', 'Le = 1.11')
+legend('show')
+
+subplot(1, 3, 3);
+hold on
+title('Nitrogen (N2) Diffusion Coefficients')
+plot(x, D3_model1(:), 'DisplayName', 'Fick Model')
+plot(x, D3_model2(:), 'DisplayName', 'Wilke Model')
+plot(x, D3_model3(:), 'DisplayName', 'Le = 1')
+plot(x, D3_model4(:), 'DisplayName', 'Le = 1.0')
+legend('show')
 
 function W = molarmass(Y1, Y2, Y3, W1, W2, W3)
     W = (Y1/W1 + Y2/W2 + Y3/W3).^-1;
