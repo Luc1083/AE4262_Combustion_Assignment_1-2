@@ -55,6 +55,8 @@ hold on
 plot(x,X1(:), 'DisplayName', 'Hydrogen [H2]')
 plot(x,X2(:), 'DisplayName', 'Oxygen [02]')
 plot(x,X3(:), 'DisplayName', 'Nitrogen [N2]')
+xlabel('Domain Position [m]')
+ylabel('Mole Fraction [-]')
 legend('show')
 
 % Compute Mass Fraction Along the Domain
@@ -76,6 +78,8 @@ hold on
 plot(x,Y1(:), 'DisplayName', 'Hydrogen [H2]')
 plot(x,Y2(:), 'DisplayName', 'Oxygen [02]','LineStyle','--','Color','k')
 plot(x,Y3(:), 'DisplayName', 'Nitrogen [N2]')
+xlabel('Domain Position [m]')
+ylabel('Mass Fraction [-]')
 legend('show')
 
 % Compute Mixture Molar Mass along the Domain
@@ -89,14 +93,18 @@ rho3 = rho_m .* Y3;
 figure('Name','Mixture Molar Mass at t=0')
 hold on 
 plot(x,W(:), 'DisplayName', 'Mixture Molar Mass')
+xlabel('Domain Position [m]')
+ylabel('Molar Mass [kg/mol]')
 legend('show')
 
-figure('Name','Mixture Molar Mass & Density at t=0')
+figure('Name','Mixture & Species Density at t=0')
 hold on 
 plot(x,rho_m(:), 'DisplayName', 'Mixture Density')
 plot(x,rho1, 'DisplayName', 'Hydrogen [H2]')
 plot(x,rho2, 'DisplayName', 'Oxygen [02]','LineStyle','--','Color','k')
 plot(x,rho3, 'DisplayName', 'Nitrogen [N2]')
+xlabel('Domain Position [m]')
+ylabel('Density [kg/m^3]')
 legend('show')
 
 % Compute Molar Concentration along the Domain
@@ -153,12 +161,13 @@ mf_2_model1 = -rho_m .* D2_model1 .* dY2_dx;
 mf_3_model1 = -mf_2_model1 -mf_1_model1;
 mf_3_model1_nc = -rho_m .* D3_model1 .* dY3_dx;
 
-
 figure('Name','Diffusion Constants (Fick Model) at t=0')
 hold on 
 plot(x,D1_model1(:), 'DisplayName', 'Hydrogen [H2]')
 plot(x,D2_model1(:), 'DisplayName', 'Oxygen [02]','LineStyle','--','Color','k')
 plot(x,D3_model1(:), 'DisplayName', 'Nitrogen [N2]')
+xlabel('Domain Position [m]')
+ylabel('Diffusion Constant [m^2/s]')
 legend('show')
 
 figure('Name','Mass Flux (Fick Model) at t=0')
@@ -167,6 +176,7 @@ plot(x,mf_1_model1(:), 'DisplayName', 'Hydrogen [H2]')
 plot(x,mf_2_model1(:), 'DisplayName', 'Oxygen [02]','LineStyle','--','Color','k')
 plot(x,mf_3_model1(:), 'DisplayName', 'Nitrogen [N2]')
 plot(x,mf_3_model1_nc(:), 'DisplayName', 'Nitrogen [N2] Non Consistent')
+xlabel('Mass Flux')
 legend('show')
 
 % 2. Wilke Model, Di_Model2
