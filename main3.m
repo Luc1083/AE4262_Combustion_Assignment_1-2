@@ -165,8 +165,8 @@ D1_model2 = (X2 ./ (D_H2_O2 .* (1-X1)) + X3 ./ (D_H2_N2 .* (1-X1))).^-1;
 D2_model2 = (X1 ./ (D_O2_H2 .* (1-X2)) + X3 ./ (D_O2_N2 .* (1-X2))).^-1;
 D3_model2 = (X1 ./ (D_N2_H2 .* (1-X3)) + X2 ./ (D_N2_O2 .* (1-X3))).^-1;
 
-mf_1_model2 = -rho1 .* D1_model2 .* dY1_dx;
-mf_2_model2 = -rho2 .* D2_model2 .* dY2_dx;
+mf_1_model2 = -rho_m .* D1_model2 .* dY1_dx;
+mf_2_model2 = -rho_m .* D2_model2 .* dY2_dx;
 mf_3_model2 = -mf_2_model2 -mf_1_model2;
 mf_3_model2_nc = -rho_m .* D3_model2 .* dY3_dx;
 
@@ -199,8 +199,8 @@ D1_model3 = lambda ./ (rho_m .* Cp);
 D2_model3 = lambda ./ (rho_m .* Cp);
 D3_model3 = lambda ./ (rho_m .* Cp);
 
-mf_1_model3 = -rho1 .* D1_model3 .* dY1_dx;
-mf_2_model3 = -rho2 .* D2_model3 .* dY2_dx;
+mf_1_model3 = -rho_m .* D1_model3 .* dY1_dx;
+mf_2_model3 = -rho_m .* D2_model3 .* dY2_dx;
 mf_3_model3 = -mf_2_model3 -mf_1_model3;
 mf_3_model3_nc = -rho_m .* D3_model3 .* dY3_dx;
 
@@ -226,8 +226,8 @@ D1_model4 = lambda ./ (Le(1) .* rho_m .* Cp);
 D2_model4 = lambda ./ (Le(2) .* rho_m .* Cp);
 D3_model4 = lambda ./ (Le(3) .* rho_m .* Cp);
 
-mf_1_model4 = -rho1 .* D1_model4 .* dY1_dx;
-mf_2_model4 = -rho2 .* D2_model4 .* dY2_dx;
+mf_1_model4 = -rho_m .* D1_model4 .* dY1_dx;
+mf_2_model4 = -rho_m .* D2_model4 .* dY2_dx;
 mf_3_model4 = -mf_2_model4 -mf_1_model4;
 mf_3_model4_nc = -rho_m .* D3_model4 .* dY3_dx;
 
