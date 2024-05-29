@@ -122,9 +122,9 @@ legend('show')
 
 % Diffusion Model Values
 
-dY1_dx = derivative_mass_fraction(Y1, x, dx);
-dY2_dx = derivative_mass_fraction(Y2, x, dx);
-dY3_dx = derivative_mass_fraction(Y3, x, dx);
+dY1_dx = derivative_mass_fraction(Y1, x);
+dY2_dx = derivative_mass_fraction(Y2, x);
+dY3_dx = derivative_mass_fraction(Y3, x);
 
 % % Hydrogen is Carrier
 D_H2_H2 = 33.83 / 10^5;
@@ -362,15 +362,11 @@ function rho = density(P, R0, T, W)
     rho = P * W / (R0 * T);
 end
 
-function X = molarfraction(Wi, W, Yi)
-    X = W / Wi .* Yi;
-end
-
-function deltaY = derivative_mass_fraction(Y, x, dx)
+function deltaY = derivative_mass_fraction(Y, x)
     deltaY = zeros(1,length(x));
-    deltaY(1) = (Y(2) - Y(1)) / (dx);
+    deltaY(1) = (-Y(3) + 4 * Y(2) - 3 * Y(1)) / (2 * (x(2) - x(1)));
     for i = 2:length(x)-1
-        deltaY(i) = (Y(i+1)-Y(i-1)) / (2 * dx);
+        deltaY(i) = (Y(i+1)-Y(i-1)) / (x(i+1) - x(i-1));
     end
-    deltaY(end) = (Y(end)-Y(end-1)) / (dx);
+    deltaY(end) = (3 * Y(end) - 4 * Y(end-1) + Y(end-2)) / (2 * (x(end) - x(end-1)));
 end
