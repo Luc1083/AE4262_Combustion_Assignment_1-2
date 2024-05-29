@@ -52,9 +52,9 @@ X3 = linspace(X3(1), X3(end), length(x));
 
 figure('Name','Mole Fractions at t=0')
 hold on 
-plot(x,X1(:), 'DisplayName', 'Hydrogen [H2]')
-plot(x,X2(:), 'DisplayName', 'Oxygen [02]')
-plot(x,X3(:), 'DisplayName', 'Nitrogen [N2]')
+plot(x,X1(:), 'DisplayName', 'Hydrogen [H2]', 'Color', 'r')
+plot(x,X2(:), 'DisplayName', 'Oxygen [02]', 'Color', 'k')
+plot(x,X3(:), 'DisplayName', 'Nitrogen [N2]', 'Color', 'b')
 xlabel('Domain Position [m]')
 ylabel('Mole Fraction [-]')
 legend('show')
@@ -75,9 +75,9 @@ end
 
 figure('Name','Mass Fractions at t=0')
 hold on 
-plot(x,Y1(:), 'DisplayName', 'Hydrogen [H2]')
+plot(x,Y1(:), 'DisplayName', 'Hydrogen [H2]', 'Color', 'r')
 plot(x,Y2(:), 'DisplayName', 'Oxygen [02]','LineStyle','--','Color','k')
-plot(x,Y3(:), 'DisplayName', 'Nitrogen [N2]')
+plot(x,Y3(:), 'DisplayName', 'Nitrogen [N2]', 'Color', 'b')
 xlabel('Domain Position [m]')
 ylabel('Mass Fraction [-]')
 legend('show')
@@ -100,9 +100,9 @@ legend('show')
 figure('Name','Mixture & Species Density at t=0')
 hold on 
 plot(x,rho_m(:), 'DisplayName', 'Mixture Density')
-plot(x,rho1, 'DisplayName', 'Hydrogen [H2]')
-plot(x,rho2, 'DisplayName', 'Oxygen [02]','LineStyle','--','Color','k')
-plot(x,rho3, 'DisplayName', 'Nitrogen [N2]')
+plot(x,rho1, 'DisplayName', 'Hydrogen [H2]', 'Color', 'r')
+plot(x,rho2, 'DisplayName', 'Oxygen [02]','LineStyle','--', 'Color','k')
+plot(x,rho3, 'DisplayName', 'Nitrogen [N2]','Color','b')
 xlabel('Domain Position [m]')
 ylabel('Density [kg/m^3]')
 legend('show')
@@ -115,9 +115,11 @@ M3 = rho_m .* Y3 / W3;
 
 figure('Name','Molar Concentration at t=0')
 hold on 
-plot(x,M1(:), 'DisplayName', 'Hydrogen [H2]')
+plot(x,M1(:), 'DisplayName', 'Hydrogen [H2]','Color', 'r')
 plot(x,M2(:), 'DisplayName', 'Oxygen [02]','LineStyle','--','Color','k')
-plot(x,M3(:), 'DisplayName', 'Nitrogen [N2]')
+plot(x,M3(:), 'DisplayName', 'Nitrogen [N2]','Color','b')
+xlabel('Domain Position [m]')
+ylabel('Molar Concentration [mol/m^3]')
 legend('show')
 
 % Diffusion Model Values
@@ -159,24 +161,25 @@ D3_model1 = D_N2_N2 * ones(1,length(x));
 mf_1_model1 = -rho_m .* D1_model1 .* dY1_dx;
 mf_2_model1 = -rho_m .* D2_model1 .* dY2_dx;
 mf_3_model1 = -mf_2_model1 -mf_1_model1;
-mf_3_model1_nc = -rho_m .* D3_model1 .* dY3_dx;
+% mf_3_model1_nc = -rho_m .* D3_model1 .* dY3_dx;
 
 figure('Name','Diffusion Constants (Fick Model) at t=0')
 hold on 
-plot(x,D1_model1(:), 'DisplayName', 'Hydrogen [H2]')
+plot(x,D1_model1(:), 'DisplayName', 'Hydrogen [H2]','Color', 'r')
 plot(x,D2_model1(:), 'DisplayName', 'Oxygen [02]','LineStyle','--','Color','k')
-plot(x,D3_model1(:), 'DisplayName', 'Nitrogen [N2]')
+plot(x,D3_model1(:), 'DisplayName', 'Nitrogen [N2]','Color', 'b')
 xlabel('Domain Position [m]')
-ylabel('Diffusion Constant [m^2/s]')
+ylabel('Diffusion Coefficient [m^2/s]')
 legend('show')
 
 figure('Name','Mass Flux (Fick Model) at t=0')
 hold on 
-plot(x,mf_1_model1(:), 'DisplayName', 'Hydrogen [H2]')
+plot(x,mf_1_model1(:), 'DisplayName', 'Hydrogen [H2]','Color', 'r')
 plot(x,mf_2_model1(:), 'DisplayName', 'Oxygen [02]','LineStyle','--','Color','k')
-plot(x,mf_3_model1(:), 'DisplayName', 'Nitrogen [N2]')
-plot(x,mf_3_model1_nc(:), 'DisplayName', 'Nitrogen [N2] Non Consistent')
-xlabel('Mass Flux')
+plot(x,mf_3_model1(:), 'DisplayName', 'Nitrogen [N2]','Color', 'b')
+% plot(x,mf_3_model1_nc(:), 'DisplayName', 'Nitrogen [N2] Non Consistent')
+xlabel('Domain Postition [m]')
+ylabel('Mass Flux [kg/m^2*s]')
 legend('show')
 
 % 2. Wilke Model, Di_Model2
@@ -188,21 +191,25 @@ D3_model2 = (X1 ./ (D_N2_H2 .* (1-X3)) + X2 ./ (D_N2_O2 .* (1-X3))).^-1;
 mf_1_model2 = -rho_m .* D1_model2 .* dY1_dx;
 mf_2_model2 = -rho_m .* D2_model2 .* dY2_dx;
 mf_3_model2 = -mf_2_model2 -mf_1_model2;
-mf_3_model2_nc = -rho_m .* D3_model2 .* dY3_dx;
+% mf_3_model2_nc = -rho_m .* D3_model2 .* dY3_dx;
 
 figure('Name','Diffusion Constants (Wilke Model) at t=0')
 hold on 
-plot(x,D1_model2(:), 'DisplayName', 'Hydrogen [H2]')
+plot(x,D1_model2(:), 'DisplayName', 'Hydrogen [H2]','Color','r')
 plot(x,D2_model2(:), 'DisplayName', 'Oxygen [02]','LineStyle','--','Color','k')
-plot(x,D3_model2(:), 'DisplayName', 'Nitrogen [N2]')
+plot(x,D3_model2(:), 'DisplayName', 'Nitrogen [N2]','Color','b')
+xlabel('Domain Position [m]')
+ylabel('Diffusion Coefficient [m^2/s]')
 legend('show')
 
 figure('Name','Mass Flux (Wilke Model) at t=0')
 hold on 
-plot(x,mf_1_model2(:), 'DisplayName', 'Hydrogen [H2]')
+plot(x,mf_1_model2(:), 'DisplayName', 'Hydrogen [H2]','Color','r')
 plot(x,mf_2_model2(:), 'DisplayName', 'Oxygen [02]','LineStyle','--','Color','k')
-plot(x,mf_3_model2(:), 'DisplayName', 'Nitrogen [N2]')
-plot(x,mf_3_model2_nc(:), 'DisplayName', 'Nitrogen [N2] Non Consistent')
+plot(x,mf_3_model2(:), 'DisplayName', 'Nitrogen [N2]','Color','b')
+% plot(x,mf_3_model2_nc(:), 'DisplayName', 'Nitrogen [N2] Non Consistent')
+xlabel('Domain Postition [m]')
+ylabel('Mass Flux [kg/m^2*s]')
 legend('show')
 
 % 3. Le = 1 species diffusivity model (species have same diffusivity as heat)
@@ -222,21 +229,25 @@ D3_model3 = lambda ./ (rho_m .* Cp);
 mf_1_model3 = -rho_m .* D1_model3 .* dY1_dx;
 mf_2_model3 = -rho_m .* D2_model3 .* dY2_dx;
 mf_3_model3 = -mf_2_model3 -mf_1_model3;
-mf_3_model3_nc = -rho_m .* D3_model3 .* dY3_dx;
+% mf_3_model3_nc = -rho_m .* D3_model3 .* dY3_dx;
 
 figure('Name','Diffusion Constants (Le = 1) at t=0')
 hold on 
-plot(x,D1_model3(:), 'DisplayName', 'Hydrogen [H2]')
+plot(x,D1_model3(:), 'DisplayName', 'Hydrogen [H2]','Color','r')
 plot(x,D2_model3(:), 'DisplayName', 'Oxygen [02]','LineStyle','--','Color','k')
-plot(x,D3_model3(:), 'DisplayName', 'Nitrogen [N2]')
+plot(x,D3_model3(:), 'DisplayName', 'Nitrogen [N2]','Color','b')
+xlabel('Domain Position [m]')
+ylabel('Diffusion Coefficient [m^2/s]')
 legend('show')
 
 figure('Name','Mass Flux (Le = 1) at t=0')
 hold on 
-plot(x,mf_1_model3(:), 'DisplayName', 'Hydrogen [H2]')
+plot(x,mf_1_model3(:), 'DisplayName', 'Hydrogen [H2]','Color','r')
 plot(x,mf_2_model3(:), 'DisplayName', 'Oxygen [02]','LineStyle','--','Color','k')
-plot(x,mf_3_model3(:), 'DisplayName', 'Nitrogen [N2]')
-plot(x,mf_3_model3_nc(:), 'DisplayName', 'Nitrogen [N2] Non Consistent', 'LineStyle','--')
+plot(x,mf_3_model3(:), 'DisplayName', 'Nitrogen [N2]','Color','b')
+% plot(x,mf_3_model3_nc(:), 'DisplayName', 'Nitrogen [N2] Non Consistent', 'LineStyle','--')
+xlabel('Domain Postition [m]')
+ylabel('Mass Flux [kg/m^2*s]')
 legend('show')
 
 % 4. Le = const number model
@@ -252,24 +263,28 @@ mf_3_model4_nc = -rho_m .* D3_model4 .* dY3_dx;
 
 figure('Name','Diffusion Constants (Le = const) at t=0')
 hold on 
-plot(x,D1_model4(:), 'DisplayName', 'Hydrogen [H2]')
+plot(x,D1_model4(:), 'DisplayName', 'Hydrogen [H2]','Color','r')
 plot(x,D2_model4(:), 'DisplayName', 'Oxygen [02]','LineStyle','--','Color','k')
-plot(x,D3_model4(:), 'DisplayName', 'Nitrogen [N2]')
+plot(x,D3_model4(:), 'DisplayName', 'Nitrogen [N2]','Color','b')
+xlabel('Domain Position [m]')
+ylabel('Diffusion Coefficient [m^2/s]')
 legend('show')
 
 figure('Name','Mass Flux (Le = const) at t=0')
 hold on 
-plot(x,mf_1_model4(:), 'DisplayName', 'Hydrogen [H2]')
+plot(x,mf_1_model4(:), 'DisplayName', 'Hydrogen [H2]','Color','r')
 plot(x,mf_2_model4(:), 'DisplayName', 'Oxygen [02]','LineStyle','--','Color','k')
-plot(x,mf_3_model4(:), 'DisplayName', 'Nitrogen [N2]')
-plot(x,mf_3_model4_nc(:), 'DisplayName', 'Nitrogen [N2] Non Consistent')
+plot(x,mf_3_model4(:), 'DisplayName', 'Nitrogen [N2]','Color','b')
+% plot(x,mf_3_model4_nc(:), 'DisplayName', 'Nitrogen [N2] Non Consistent')
+xlabel('Domain Postition [m]')
+ylabel('Mass Flux [kg/m^2*s]')
 legend('show')
 
 figure('Name','Mass Fraction Gradient dydx')
 hold on 
-plot(x,dY1_dx(:), 'DisplayName', 'Hydrogen [H2]')
+plot(x,dY1_dx(:), 'DisplayName', 'Hydrogen [H2]','Color','r')
 plot(x,dY2_dx(:), 'DisplayName', 'Oxygen [02]','LineStyle','--','Color','k')
-plot(x,dY3_dx(:), 'DisplayName', 'Nitrogen [N2]')
+plot(x,dY3_dx(:), 'DisplayName', 'Nitrogen [N2]','Color','b')
 legend('show')
 
 figure('Name','Specific Heat')
