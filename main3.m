@@ -315,39 +315,39 @@ hold on
 plot(x,lambda(:))
 legend('show')
 
-% 3 plots next to each other showing mass flux of diff models
+%% 3 plots next to each other showing mass flux of diff models
 figure('Name','Species Mass Flux')
 
 subplot(1, 3, 1);
 hold on
-title('Hydrogen (H2) Mass Flux')
+title('Hydrogen (H2)')
 plot(x, mf_1_model1(:), 'DisplayName', 'Fick Model')
 plot(x, mf_1_model2(:), 'DisplayName', 'Wilke Model')
 plot(x, mf_1_model3(:), 'DisplayName', 'Le = 1')
 plot(x, mf_1_model4(:), 'DisplayName', 'Le = 0.3')
-xlabel('Domain Position [m]')
+xlabel('Pos. [m]')
 ylabel('Mass Flux [kg/m^2*s]')
 legend('show')
 
 subplot(1, 3, 2);
 hold on
-title('Oxygen (O2) Mass Flux')
+title('Oxygen (O2)')
 plot(x, mf_2_model1(:), 'DisplayName', 'Fick Model')
 plot(x, mf_2_model2(:), 'DisplayName', 'Wilke Model')
 plot(x, mf_2_model3(:), 'DisplayName', 'Le = 1')
 plot(x, mf_2_model4(:), 'DisplayName', 'Le = 1.11')
-xlabel('Domain Position [m]')
+xlabel('Pos. [m]')
 ylabel('Mass Flux [kg/m^2*s]')
 legend('show')
 
 subplot(1, 3, 3);
 hold on
-title('Nitrogen (N2) Mass Flux')
+title('Nitrogen (N2)')
 plot(x, mf_3_model1(:), 'DisplayName', 'Fick Model')
 plot(x, mf_3_model2(:), 'DisplayName', 'Wilke Model')
 plot(x, mf_3_model3(:), 'DisplayName', 'Le = 1')
 plot(x, mf_3_model4(:), 'DisplayName', 'Le = 1.0')
-xlabel('Domain Position [m]')
+xlabel('Pos. [m]')
 ylabel('Mass Flux [kg/m^2*s]')
 legend('show')
 
@@ -356,34 +356,34 @@ figure('Name','Species Diffusion Coefficients')
 
 subplot(1, 3, 1);
 hold on
-title('Hydrogen (H2) Diffusion Coefficients')
+title('Hydrogen (H2)')
 plot(x, D1_model1(:), 'DisplayName', 'Fick Model')
 plot(x, D1_model2(:), 'DisplayName', 'Wilke Model')
 plot(x, D1_model3(:), 'DisplayName', 'Le = 1')
 plot(x, D1_model4(:), 'DisplayName', 'Le = 0.3')
-xlabel('Domain Position [m]')
+xlabel('Pos. [m]')
 ylabel('Diffusion Coefficient [m^2/s]')
 legend('show')
 
 subplot(1, 3, 2);
 hold on
-title('Oxygen (O2) Diffusion Coefficients')
+title('Oxygen (O2)')
 plot(x, D2_model1(:), 'DisplayName', 'Fick Model')
 plot(x, D2_model2(:), 'DisplayName', 'Wilke Model')
 plot(x, D2_model3(:), 'DisplayName', 'Le = 1')
 plot(x, D2_model4(:), 'DisplayName', 'Le = 1.11')
-xlabel('Domain Position [m]')
+xlabel('Pos. [m]')
 ylabel('Diffusion Coefficient [m^2/s]')
 legend('show')
 
 subplot(1, 3, 3);
 hold on
-title('Nitrogen (N2) Diffusion Coefficients')
+title('Nitrogen (N2)')
 plot(x, D3_model1(:), 'DisplayName', 'Fick Model')
 plot(x, D3_model2(:), 'DisplayName', 'Wilke Model')
 plot(x, D3_model3(:), 'DisplayName', 'Le = 1')
 plot(x, D3_model4(:), 'DisplayName', 'Le = 1.0')
-xlabel('Domain Position [m]')
+xlabel('Pos. [m]')
 ylabel('Diffusion Coefficient [m^2/s]')
 legend('show')
 
