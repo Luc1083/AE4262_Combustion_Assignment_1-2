@@ -1,4 +1,4 @@
-% Constants
+%% Constants
 P = 101325;   % Atmospheric Pressure [Pa]
 T = 500;      % Temperature [K]
 W1 = 16.0428 / 1000; % CH4 [kg/mol]
@@ -6,11 +6,11 @@ W2 = 31.9988 / 1000; % 02 [kg/mol]
 W3 = 28.0152 / 1000; % N2 [kg/mol]
 R0 = 8.314;    %    [J/mol*K]
 
-% Initialise Spacial & Temporal Mesh
+%% Initialise Spacial & Temporal Mesh
 dx = 1e-6;             
 x = 0:dx:1e-4;  % [m]
 
-% Initialise Variable Arrays 
+%% Initialise Variable Arrays 
 % Yi = Mass Fraction, Xi = molar fraction, W = molar mass of mixture
 
 Y1 = zeros(1,length(x));
@@ -23,7 +23,7 @@ X3 = zeros(1,length(x));
 
 W = zeros(1,length(x));
 
-% Set Initial Solution at t = 0
+%% Set Initial Solution at t = 0
 Y1(1) = 0.4;
 Y1(end) = 0;
 
@@ -58,7 +58,7 @@ xlabel('Domain Position [m]')
 ylabel('Mole Fraction [-]')
 legend('show')
 
-% Compute Mass Fraction Along the Domain
+%% Compute Mass Fraction Along the Domain
 for i = 1:length(x)
     
     A = [X1(i)-1-X1(i)*W1/W3, X1(i)*W1/W2 - X1(i)*W1/W3;
@@ -81,7 +81,7 @@ xlabel('Domain Position [m]')
 ylabel('Mass Fraction [-]')
 legend('show')
 
-% Compute Mixture Molar Mass along the Domain
+%% Compute Mixture Molar Mass along the Domain
 
 W = molarmass(Y1, Y2, Y3, W1, W2, W3);
 rho_m = density(P, R0, T, W);
@@ -106,7 +106,7 @@ xlabel('Domain Position [m]')
 ylabel('Density [kg/m^3]')
 legend('show')
 
-% Compute Molar Concentration along the Domain
+%% Compute Molar Concentration along the Domain
 
 M1 = rho_m .* Y1 / W1;
 M2 = rho_m .* Y2 / W2;
@@ -119,11 +119,11 @@ plot(x,M2(:), 'DisplayName', 'Oxygen [02]','LineStyle','--','Color','k')
 plot(x,M3(:), 'DisplayName', 'Nitrogen [N2]')
 legend('show')
 
-% Diffusion Model Values
+%% Diffusion Model Values
 
-dY1_dx = derivative_mass_fraction(Y1, x, dx);
-dY2_dx = derivative_mass_fraction(Y2, x, dx);
-dY3_dx = derivative_mass_fraction(Y3, x, dx);
+dY1_dx = derivative_mass_fraction(Y1, x);
+dY2_dx = derivative_mass_fraction(Y2, x);
+dY3_dx = derivative_mass_fraction(Y3, x);
 
 % % Hydrogen is Carrier
 D_H2_H2 = 33.83 / 10^5;
@@ -149,7 +149,7 @@ D_O2_CH4 = 5.49 / 10^5;
 D_N2_CH4 = 5.37 / 10^5;
 D_CH4_CH4 = 5.63 / 10^5;
 
-% 1. Fick's Diffusion Model, Binary Diffusion Constants (D_i_carrier)
+%% 1. Fick's Diffusion Model, Binary Diffusion Constants (D_i_carrier)
 
 D1_model1 = D_CH4_N2 * ones(1,length(x));
 D2_model1 = D_O2_N2 * ones(1,length(x));
@@ -178,7 +178,7 @@ plot(x,mf_3_model1_nc(:), 'DisplayName', 'Nitrogen [N2] Non Consistent')
 xlabel('Mass Flux')
 legend('show')
 
-% 2. Wilke Model, Di_Model2
+%% 2. Wilke Model, Di_Model2
 
 D1_model2 = (X2 ./ (D_CH4_O2 .* (1-X1)) + X3 ./ (D_CH4_N2 .* (1-X1))).^-1;
 D2_model2 = (X1 ./ (D_O2_CH4 .* (1-X2)) + X3 ./ (D_O2_N2 .* (1-X2))).^-1;
@@ -204,7 +204,7 @@ plot(x,mf_3_model2(:), 'DisplayName', 'Nitrogen [N2]')
 plot(x,mf_3_model2_nc(:), 'DisplayName', 'Nitrogen [N2] Non Consistent')
 legend('show')
 
-% 3. Le = 1 species diffusivity model (species have same diffusivity as heat)
+%% 3. Le = 1 species diffusivity model (species have same diffusivity as heat)
 
 lambda = zeros(1,length(x));
 Cp = zeros(1,length(x));
@@ -225,22 +225,22 @@ mf_3_model3_nc = -rho_m .* D3_model3 .* dY3_dx;
 
 figure('Name','Diffusion Constants (Le = 1) at t=0')
 hold on 
-plot(x,D1_model3(:), 'DisplayName', 'Methane [H2]')
+plot(x,D1_model3(:), 'DisplayName', 'Methane [CH4]')
 plot(x,D2_model3(:), 'DisplayName', 'Oxygen [02]','LineStyle','--','Color','k')
 plot(x,D3_model3(:), 'DisplayName', 'Nitrogen [N2]')
 legend('show')
 
 figure('Name','Mass Flux (Le = 1) at t=0')
 hold on 
-plot(x,mf_1_model3(:), 'DisplayName', 'Methane [H2]')
+plot(x,mf_1_model3(:), 'DisplayName', 'Methane [CH4]')
 plot(x,mf_2_model3(:), 'DisplayName', 'Oxygen [02]','LineStyle','--','Color','k')
 plot(x,mf_3_model3(:), 'DisplayName', 'Nitrogen [N2]')
-plot(x,mf_3_model3_nc(:), 'DisplayName', 'Nitrogen [N2] Non Consistent', 'LineStyle','--')
+% plot(x,mf_3_model3_nc(:), 'DisplayName', 'Nitrogen [N2] Non Consistent', 'LineStyle','--')
 legend('show')
 
-% 4. Le = const number model
+%% 4. Le = const number model
 
-D1_model4 = lambda ./ (0.3 .* rho_m .* Cp);
+D1_model4 = lambda ./ (0.955 .* rho_m .* Cp);
 D2_model4 = lambda ./ (1.11 .* rho_m .* Cp);
 D3_model4 = lambda ./ (1.0 .* rho_m .* Cp);
 
@@ -251,22 +251,22 @@ mf_3_model4_nc = -rho_m .* D3_model4 .* dY3_dx;
 
 figure('Name','Diffusion Constants (Le = const) at t=0')
 hold on 
-plot(x,D1_model4(:), 'DisplayName', 'Methane [H2]')
+plot(x,D1_model4(:), 'DisplayName', 'Methane [CH4]')
 plot(x,D2_model4(:), 'DisplayName', 'Oxygen [02]','LineStyle','--','Color','k')
 plot(x,D3_model4(:), 'DisplayName', 'Nitrogen [N2]')
 legend('show')
 
 figure('Name','Mass Flux (Le = const) at t=0')
 hold on 
-plot(x,mf_1_model4(:), 'DisplayName', 'Methane [H2]')
+plot(x,mf_1_model4(:), 'DisplayName', 'Methane [CH4]')
 plot(x,mf_2_model4(:), 'DisplayName', 'Oxygen [02]','LineStyle','--','Color','k')
 plot(x,mf_3_model4(:), 'DisplayName', 'Nitrogen [N2]')
-plot(x,mf_3_model4_nc(:), 'DisplayName', 'Nitrogen [N2] Non Consistent')
+% plot(x,mf_3_model4_nc(:), 'DisplayName', 'Nitrogen [N2] Non Consistent')
 legend('show')
 
 figure('Name','Mass Fraction Gradient dydx')
 hold on 
-plot(x,dY1_dx(:), 'DisplayName', 'Methane [H2]')
+plot(x,dY1_dx(:), 'DisplayName', 'Methane [CH]')
 plot(x,dY2_dx(:), 'DisplayName', 'Oxygen [02]','LineStyle','--','Color','k')
 plot(x,dY3_dx(:), 'DisplayName', 'Nitrogen [N2]')
 legend('show')
@@ -281,7 +281,7 @@ hold on
 plot(x,lambda(:))
 legend('show')
 
-% 3 plots next to each other showing mass flux of diff models
+%% 3 plots next to each other showing mass flux of diff models
 figure('Name','Species Mass Flux')
 
 subplot(1, 3, 1);
@@ -317,39 +317,39 @@ xlabel('Domain Position [m]')
 ylabel('Mass Flux [kg/m^2*s]')
 legend('show')
 
-% 3 plots next to each other showing diffusion coefficients of diff models
+%% 3 plots next to each other showing diffusion coefficients of diff models
 figure('Name','Species Diffusion Coefficients')
 
 subplot(1, 3, 1);
 hold on
-title('Methane (CH4) Diffusion Coefficients')
+title('Methane (CH4)')
 plot(x, D1_model1(:), 'DisplayName', 'Fick Model')
 plot(x, D1_model2(:), 'DisplayName', 'Wilke Model')
 plot(x, D1_model3(:), 'DisplayName', 'Le = 1')
 plot(x, D1_model4(:), 'DisplayName', 'Le = 0.3')
-xlabel('Domain Position [m]')
+xlabel('Pos. [m]')
 ylabel('Diffusion Coefficient [m^2/s]')
 legend('show')
 
 subplot(1, 3, 2);
 hold on
-title('Oxygen (O2) Diffusion Coefficients')
+title('Oxygen (O2)')
 plot(x, D2_model1(:), 'DisplayName', 'Fick Model')
 plot(x, D2_model2(:), 'DisplayName', 'Wilke Model')
 plot(x, D2_model3(:), 'DisplayName', 'Le = 1')
 plot(x, D2_model4(:), 'DisplayName', 'Le = 1.11')
-xlabel('Domain Position [m]')
+xlabel('Pos. [m]')
 ylabel('Diffusion Coefficient [m^2/s]')
 legend('show')
 
 subplot(1, 3, 3);
 hold on
-title('Nitrogen (N2) Diffusion Coefficients')
+title('Nitrogen (N2)')
 plot(x, D3_model1(:), 'DisplayName', 'Fick Model')
 plot(x, D3_model2(:), 'DisplayName', 'Wilke Model')
 plot(x, D3_model3(:), 'DisplayName', 'Le = 1')
 plot(x, D3_model4(:), 'DisplayName', 'Le = 1.0')
-xlabel('Domain Position [m]')
+xlabel('Pos. [m]')
 ylabel('Diffusion Coefficient [m^2/s]')
 legend('show')
 
