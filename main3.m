@@ -1,4 +1,4 @@
-% Constants
+%% Constants
 P = 101325;   % Atmospheric Pressure [Pa]
 T = 500;      % Temperature [K]
 W1 = 2.0159 / 1000;  % H2 [kg/mol]
@@ -7,11 +7,11 @@ W3 = 28.0152 / 1000; % N2 [kg/mol]
 W_CH4 = 16.0428 / 1000; % CH4 [kg/mol]
 R0 = 8.314;    %    [J/mol*K]
 
-% Initialise Spacial & Temporal Mesh
+%% Initialise Spacial & Temporal Mesh
 dx = 1e-6;             
 x = 0:dx:1e-4;  % [m]
 
-% Initialise Variable Arrays 
+%% Initialise Variable Arrays 
 % Yi = Mass Fraction, Xi = molar fraction, W = molar mass of mixture
 
 Y1 = zeros(1,length(x));
@@ -24,7 +24,7 @@ X3 = zeros(1,length(x));
 
 W = zeros(1,length(x));
 
-% Set Initial Solution at t = 0
+%% Set Initial Solution at t = 0
 Y1(1) = 0.4;
 Y1(end) = 0;
 
@@ -82,7 +82,7 @@ xlabel('Domain Position [m]')
 ylabel('Mass Fraction [-]')
 legend('show')
 
-% Compute Mixture Molar Mass along the Domain
+%% Compute Mixture Molar Mass along the Domain
 
 W = molarmass(Y1, Y2, Y3, W1, W2, W3);
 rho_m = density(P, R0, T, W);
@@ -107,7 +107,7 @@ xlabel('Domain Position [m]')
 ylabel('Density [kg/m^3]')
 legend('show')
 
-% Compute Molar Concentration along the Domain
+%% Compute Molar Concentration along the Domain
 
 M1 = rho_m .* Y1 / W1;
 M2 = rho_m .* Y2 / W2;
@@ -122,7 +122,33 @@ xlabel('Domain Position [m]')
 ylabel('Molar Concentration [mol/m^3]')
 legend('show')
 
-% Diffusion Model Values
+%% Compute Mixture specific heat and mixture thermal conductivity
+lambda = zeros(1,length(x));
+Cp = zeros(1,length(x));
+
+for i = 1:length(x)
+    lambda(i) = MixLambda_CK([H2, O2, N2], [X1(i), X2(i), X3(i)], T);
+    Cp(i) = MixCp_CK([H2, O2, N2], [X1(i), X2(i), X3(i)], T);
+end
+
+% Create a new figure
+figure;
+
+% Plot Cp with primary y-axis
+yyaxis left;
+plot(x, Cp, 'b', 'LineWidth', 2);
+ylabel('Mixture Specific Heat [J/(kg*K)]');
+xlabel('X-axis');
+
+% Add secondary y-axis for lambda
+yyaxis right;
+plot(x, lambda, 'LineWidth', 2);
+ylabel('Mixture Conductivity [W/(m*K)]');
+
+% Add legend
+legend('Cp', '\lambda', 'Location', 'best');
+
+%% Diffusion Model Values
 
 dY1_dx = derivative_mass_fraction(Y1, x);
 dY2_dx = derivative_mass_fraction(Y2, x);
@@ -152,7 +178,7 @@ D_O2_CH4 = 5.49 / 10^5;
 D_N2_CH4 = 5.37 / 10^5;
 D_CH4_CH4 = 5.63 / 10^5;
 
-% 1. Fick's Diffusion Model, Binary Diffusion Constants (D_i_carrier)
+%% 1. Fick's Diffusion Model, Binary Diffusion Constants (D_i_carrier)
 
 D1_model1 = D_H2_N2 * ones(1,length(x));
 D2_model1 = D_O2_N2 * ones(1,length(x));
@@ -182,7 +208,7 @@ xlabel('Domain Postition [m]')
 ylabel('Mass Flux [kg/m^2*s]')
 legend('show')
 
-% 2. Wilke Model, Di_Model2
+%% 2. Wilke Model, Di_Model2
 
 D1_model2 = (X2 ./ (D_H2_O2 .* (1-X1)) + X3 ./ (D_H2_N2 .* (1-X1))).^-1;
 D2_model2 = (X1 ./ (D_O2_H2 .* (1-X2)) + X3 ./ (D_O2_N2 .* (1-X2))).^-1;
@@ -212,15 +238,7 @@ xlabel('Domain Postition [m]')
 ylabel('Mass Flux [kg/m^2*s]')
 legend('show')
 
-% 3. Le = 1 species diffusivity model (species have same diffusivity as heat)
-
-lambda = zeros(1,length(x));
-Cp = zeros(1,length(x));
-
-for i = 1:length(x)
-    lambda(i) = MixLambda_CK([H2, O2, N2], [X1(i), X2(i), X3(i)], T);
-    Cp(i) = MixCp_CK([H2, O2, N2], [X1(i), X2(i), X3(i)], T);
-end
+%% 3. Le = 1 species diffusivity model (species have same diffusivity as heat)
 
 D1_model3 = lambda ./ (rho_m .* Cp);
 D2_model3 = lambda ./ (rho_m .* Cp);
@@ -250,7 +268,7 @@ xlabel('Domain Postition [m]')
 ylabel('Mass Flux [kg/m^2*s]')
 legend('show')
 
-% 4. Le = const number model
+%% 4. Le = const number model
 
 D1_model4 = lambda ./ (0.3 .* rho_m .* Cp);
 D2_model4 = lambda ./ (1.11 .* rho_m .* Cp);
